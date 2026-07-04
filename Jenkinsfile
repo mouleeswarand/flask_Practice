@@ -24,6 +24,16 @@ pipeline {
             steps {
                 sh '''
                     . venv/bin/activate
+
+                    echo "Checking MONGO_URI..."
+
+                    if [ -z "$MONGO_URI" ]; then
+                        echo "MONGO_URI is EMPTY"
+                    else
+                        echo "MONGO_URI exists"
+                        echo "$MONGO_URI" | cut -c1-30
+                    fi
+
                     pytest
                 '''
             }
