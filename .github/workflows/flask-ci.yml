@@ -1,61 +1,51 @@
-name: Flask CI/CD
+name: Flask CI/CD Pipeline
 
 on:
-
   push:
-
     branches:
-
       - main
-
       - staging
-
-  release:
-
-    types:
-
-      - published
+  push:
+    tags:
+      - 'v*'
 
 jobs:
-
-  build:
-
+  build-test-deploy:
     runs-on: ubuntu-latest
 
+    # GitHub Secrets are added here
+    env:
+      MONGO_URI: ${{ secrets.MONGO_URI }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - uses: actions/checkout@v4
-
-      - name: Setup Python
-
+      - name: Set up Python
         uses: actions/setup-python@v5
-
         with:
-
-          python-version: 3.11
+          python-version: "3.12"
 
       - name: Install Dependencies
-
         run: |
-
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run Tests
+        run: |
+          pytest
 
-        run: pytest
-
-      - name: Build
-
-        run: echo "Application Build Completed"
+      - name: Build Application
+        run: |
+          echo "Building Flask Application..."
 
       - name: Deploy to Staging
-
         if: github.ref == 'refs/heads/staging'
+        run: |
+          echo "Deploying to Staging..."
 
-        run: echo "Deploying to Staging"
-
-      - name: Deploy Production
-
-        if: github.event_name == 'release'
-
-        run: echo "Deploying Production"
+      - name: Deploy to Production
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          echo "Deploying to Production..."
