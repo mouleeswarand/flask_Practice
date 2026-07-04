@@ -8,8 +8,8 @@ pipeline {
 
             steps {
 
-                sh 'python -m pip install --upgrade pip'
-                sh 'pip install -r requirements.txt'
+                sh 'python3 -m pip install --upgrade pip'
+                sh 'python3 -m pip install -r requirements.txt'
 
             }
 
@@ -19,7 +19,7 @@ pipeline {
 
             steps {
 
-                sh 'pytest'
+                sh 'python3 -m pytest'
 
             }
 
