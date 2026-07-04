@@ -1,6 +1,8 @@
 pipeline {
 
-    agent any
+    agent {
+    label 'Jenkins-Node-sc'
+    }
 
     environment {
         MONGO_URI = credentials('mouli-cred')
