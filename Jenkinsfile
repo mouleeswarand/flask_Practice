@@ -1,5 +1,11 @@
 pipeline {
+
     agent any
+
+    environment {
+        MONGO_URI = credentials('mouli-cred')
+        SECRET_KEY = credentials('mouli-cred2')
+    }
 
     stages {
 
